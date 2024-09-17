@@ -97,14 +97,14 @@ const ConfidentAnswer = (
 
 export default function IntelligentForm() {
   const { generateQAModeResponse, generateContextModeResponse } = useActions() as Actions
-  
+
   const [loading, setLoading] = useState(false)
   const [confidentAnswerMessage, setConfidentAnswerMessage] = useState<{
     links: z.infer<typeof ProvideLinksToolSchema>['links'],
     answer: string
-  } | null>(null)
+  } | null>()
   const [showEscalation, setShowEscalation] = useState(false)
-  const [escalationFormCaption, setEscalationFormCaption] = useState<React.ReactNode | null>(null)
+  const [escalationFormCaption, setEscalationFormCaption] = useState<React.ReactNode>()
   const [nextWasClicked, setNextWasClicked] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -240,118 +240,120 @@ export default function IntelligentForm() {
   }
 
   return (
-    <ScrollArea className="flex flex-col h-full w-full">
-      <div className="flex flex-col h-full justify-center items-center">
-        <form onSubmit={handleSubmit} className="space-y-6 w-[800px] mx-auto p-6 bg-white rounded-lg shadow-md">
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="message">How can we help?</Label>
-              <Textarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-
-          {!nextWasClicked && (
-            <div className="flex w-full justify-end">
-              <Button type="button" onClick={onClickNext}>
-                Next
-              </Button>
-            </div>
-          )}
-
-          {loading && <LoadingGrid />}
-
-          {confidentAnswerMessage && (
-            <ConfidentAnswer
-              links={confidentAnswerMessage.links}
-              answer={confidentAnswerMessage.answer}
-              showEscalationForm={showEscalationForm}
-            />
-          )}
-
-          {showEscalation && (
-            <>
-              <div className="space-y-4 animate-fade-in">
-                <Separator className="my-6" />
-
-                {escalationFormCaption}
-
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="subject">Subject Line</Label>
-                    <Input
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="priority">Priority</Label>
-                    <Select name="priority" value={formData.priority} onValueChange={handleSelectChange('priority')}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select priority" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="low">Low</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="high">High</SelectItem>
-                        <SelectItem value="urgent">Urgent</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="ticketType">Ticket Type</Label>
-                    <Select name="ticketType" value={formData.ticketType} onValueChange={handleSelectChange('ticketType')}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select ticket type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="talk_to_sales">Talk to Sales</SelectItem>
-                        <SelectItem value="issue_in_production">Issue in Production</SelectItem>
-                        <SelectItem value="issue_in_development">Issue in Development</SelectItem>
-                        <SelectItem value="report_bug">Report Bug</SelectItem>
-                        <SelectItem value="onboarding_help">Onboarding Help</SelectItem>
-                        <SelectItem value="account_management">Account Management</SelectItem>
-                        <SelectItem value="feature_request">Feature Request</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <Button type="submit">Submit</Button>
-                </div>
+    <div className="flex flex-col h-full justify-center items-center">
+      <div className="w-[800px] h-[600px] mx-auto bg-white rounded-lg shadow-md flex flex-col">
+        <ScrollArea className="flex-grow p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
               </div>
-            </>
-          )}
-        </form>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="message">How can we help?</Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+
+            {!nextWasClicked && (
+              <div className="flex w-full justify-end">
+                <Button type="button" onClick={onClickNext}>
+                  Next
+                </Button>
+              </div>
+            )}
+
+            {loading && <LoadingGrid />}
+
+            {confidentAnswerMessage && (
+              <ConfidentAnswer
+                links={confidentAnswerMessage.links}
+                answer={confidentAnswerMessage.answer}
+                showEscalationForm={showEscalationForm}
+              />
+            )}
+
+            {showEscalation && (
+              <>
+                <div className="space-y-4 animate-fade-in">
+                  <Separator className="my-6" />
+
+                  {escalationFormCaption}
+
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="subject">Subject Line</Label>
+                      <Input
+                        id="subject"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="priority">Priority</Label>
+                      <Select name="priority" value={formData.priority} onValueChange={handleSelectChange('priority')}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select priority" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="low">Low</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="urgent">Urgent</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="ticketType">Ticket Type</Label>
+                      <Select name="ticketType" value={formData.ticketType} onValueChange={handleSelectChange('ticketType')}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select ticket type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="talk_to_sales">Talk to Sales</SelectItem>
+                          <SelectItem value="issue_in_production">Issue in Production</SelectItem>
+                          <SelectItem value="issue_in_development">Issue in Development</SelectItem>
+                          <SelectItem value="report_bug">Report Bug</SelectItem>
+                          <SelectItem value="onboarding_help">Onboarding Help</SelectItem>
+                          <SelectItem value="account_management">Account Management</SelectItem>
+                          <SelectItem value="feature_request">Feature Request</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button type="submit">Submit</Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </form>
+        </ScrollArea>
       </div>
-    </ScrollArea>
+    </div>
   )
 }

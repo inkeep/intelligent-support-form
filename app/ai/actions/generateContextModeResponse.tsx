@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { AI } from '../IntelligentFormAIConfig';
 
 const ikpContextModel = 'inkeep-context-expert';
-
 const inkeepBaseURL = 'https://api.inkeep.com/v1';
 
 export const contextModelResponseSchema = z.object({
