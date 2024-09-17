@@ -63,7 +63,7 @@ const ConfidentAnswer = (
       )}
 
       <p className="text-gray-600">
-        Here's a suggested answer:
+        {"Here's a suggested answer:"}
       </p>
       <Card>
         <CardContent className="p-4">
@@ -161,7 +161,7 @@ export default function IntelligentForm() {
             {links && links.length > 0 && (
               <>
                 <p className="text-gray-600">
-                  I wasn't able to find a direct answer to your question, but here's some helpful sources:
+                  {"I wasn't able to find a direct answer to your question, but here's some helpful sources:"}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {links.map((link, index) => (

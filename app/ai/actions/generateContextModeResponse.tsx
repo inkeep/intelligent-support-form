@@ -1,15 +1,12 @@
-import { createOpenAI, openai } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai';
 import { type CoreMessage, generateObject } from 'ai';
 import { getMutableAIState } from 'ai/rsc';
 import { z } from 'zod';
 import { AI } from '../IntelligentFormAIConfig';
 
 const ikpContextModel = 'inkeep-context-expert';
-// const ikpContextModel = 'inkeep-context-gpt-4o';
 
 const inkeepBaseURL = 'https://api.inkeep.com/v1';
-// const inkeepBaseURL = 'https://7f0f67d96168.ngrok.app/v1';
-
 
 export const contextModelResponseSchema = z.object({
   subjectLine: z.string(),
