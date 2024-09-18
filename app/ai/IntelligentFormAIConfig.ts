@@ -6,9 +6,22 @@ import { nanoid } from '@/lib/utils';
 import { generateQAModeResponse } from './actions/generateQAModeResponse';
 import { generateContextModeResponse } from './actions/generateContextModeResponse';
 
+const invokeInkeepAI = async (message: string) => {
+  'use server'
+
+  const [qaModelResponse, contextModelResponse] = await Promise.allSettled([
+    generateQAModeResponse(message),
+    generateContextModeResponse(message)
+  ])
+
+  return {
+    qaModelResponse,
+    contextModelResponse
+  }
+}
+
 const actions = {
-  generateQAModeResponse,
-  generateContextModeResponse,
+  invokeInkeepAI,
 };
 
 export type Actions = typeof actions;
@@ -29,3 +42,4 @@ export const AI = createAI<AIState, UIState>({
   initialUIState: [],
   initialAIState: { chatId: nanoid(), qaModeMessages: [], contextModeMessages: [] }
 })
+
