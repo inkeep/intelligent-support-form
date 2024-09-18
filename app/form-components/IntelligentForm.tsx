@@ -115,24 +115,24 @@ export default function IntelligentForm() {
     try {
       const { qaModelResponse, contextModelResponse } = await invokeInkeepAI(formData.message)
 
-      if (qaModelResponse.status === 'fulfilled' && contextModelResponse.status === 'fulfilled') {
-        const { aiAnnotations, text, links } = qaModelResponse.value
-        const { responseObject } = contextModelResponse.value
+      if (qaModelResponse && contextModelResponse) {
+        const { aiAnnotations, text, links } = qaModelResponse
+        const { responseObject } = contextModelResponse
         handleAIResponses({
           answerConfidence: aiAnnotations.answerConfidence,
           answer: text,
           links,
           prefilledFormData: responseObject
         })
-      } else if (qaModelResponse.status === 'fulfilled' && contextModelResponse.status === 'rejected') {
-        const { aiAnnotations, text, links } = qaModelResponse.value
+      } else if (qaModelResponse && contextModelResponse === null) {
+        const { aiAnnotations, text, links } = qaModelResponse
         handleAIResponses({
           answerConfidence: aiAnnotations.answerConfidence,
           answer: text,
           links,
         })
-      } else if (qaModelResponse.status === 'rejected' && contextModelResponse.status === 'fulfilled') {
-        const { responseObject } = contextModelResponse.value
+      } else if (qaModelResponse === null && contextModelResponse) {
+        const { responseObject } = contextModelResponse
         if (responseObject) {
           const { subjectLine, priority, ticketType } = responseObject
           setFormData(prevData => ({ ...prevData, subject: subjectLine, priority, ticketType }))

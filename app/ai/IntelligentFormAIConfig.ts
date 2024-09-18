@@ -15,8 +15,8 @@ const invokeInkeepAI = async (message: string) => {
   ])
 
   return {
-    qaModelResponse,
-    contextModelResponse
+    qaModelResponse: qaModelResponse.status === 'fulfilled' ? qaModelResponse.value : null,
+    contextModelResponse: contextModelResponse.status === 'fulfilled' ? contextModelResponse.value : null
   }
 }
 
