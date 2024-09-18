@@ -4,8 +4,12 @@ import { getMutableAIState } from 'ai/rsc';
 import { z } from 'zod';
 import { AI } from '../IntelligentFormAIConfig';
 
-const ikpContextModel = 'inkeep-context-expert';
-const inkeepBaseURL = 'https://api.inkeep.com/v1';
+const openai = createOpenAI({
+  apiKey: process.env.INKEEP_API_KEY,
+  baseURL: 'https://api.inkeep.com/v1'
+})
+
+const ikpContextModel = 'inkeep-context-gpt-4o';
 
 export const contextModelResponseSchema = z.object({
   subjectLine: z.string(),
@@ -21,33 +25,24 @@ export const contextModelResponseSchema = z.object({
   ]),
 });
 
-export async function generateContextModeResponse({
-  message,
-}: {
-  message: string;
-}) {
+const systemPrompt = `
+You are a helpful assistant that helps the user create a support ticket. Based on the user's message, provide an appropriate subject line, priority, and ticket type."
+`
+export async function generateContextModeResponse(message: string) {
   'use server';
 
-  console.log('message: ', message)
-
   try {
-    const openai = createOpenAI({
-      apiKey: process.env.INKEEP_API_KEY,
-      baseURL: inkeepBaseURL,
-    });
-
     const aiState = getMutableAIState<typeof AI>();
 
-    const { object, response, warnings, usage, finishReason } = await generateObject({
+    const { object } = await generateObject({
       model: openai(ikpContextModel),
-      // model: openai('gpt-4o'),
       schema: contextModelResponseSchema,
       mode: 'json',
       messages: [
         ...aiState.get().contextModeMessages,
         {
           role: "system",
-          content: "You are a helpful assistant that helps the user create a support ticket. Based on the user's message, provide an appropriate subject line, priority, and ticket type."
+          content: systemPrompt
         },
         {
           role: "user",
@@ -55,12 +50,6 @@ export async function generateContextModeResponse({
         },
       ],
     });
-
-    console.log('warnings: ', warnings)
-    console.log('usage: ', usage)
-    console.log('finishReason: ', finishReason)
-    console.log('object: ', object)
-    console.log('response: ', response)
 
     const responseAsMessage = {
       role: 'assistant',
