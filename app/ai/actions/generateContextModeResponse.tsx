@@ -9,7 +9,7 @@ const openai = createOpenAI({
   baseURL: 'https://api.inkeep.com/v1'
 })
 
-const ikpContextModel = 'inkeep-context-gpt-4o';
+const ikpContextModel = 'inkeep-context-expert';
 
 export const contextModelResponseSchema = z.object({
   subjectLine: z.string(),
