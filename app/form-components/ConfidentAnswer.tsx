@@ -20,7 +20,7 @@ export default function ConfidentAnswer({
 	showEscalationForm: ({ caption }: { caption: React.ReactNode }) => void;
 }) {
 	return (
-		<div className="space-y-4 animate-fade-in text-sm">
+		<div className="space-y-6 animate-fade-in text-sm">
 			<Separator className="my-6" />
 			<AIMessageHeader />
 			{links && links.length > 0 && (

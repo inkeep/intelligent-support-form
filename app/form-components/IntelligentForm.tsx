@@ -109,7 +109,7 @@ export default function IntelligentForm() {
 		} else {
 			showEscalationForm({
 				caption: (
-					<div className="space-y-4">
+					<div className="space-y-6">
 						<AIMessageHeader />
 						{links && links.length > 0 && (
 							<>
@@ -271,7 +271,7 @@ export default function IntelligentForm() {
 
 							{showEscalation && (
 								<>
-									<div className="space-y-8 animate-fade-in">
+									<div className="space-y-6 animate-fade-in">
 										<Separator className="my-6" />
 
 										{escalationFormCaption}
