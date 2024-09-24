@@ -10,7 +10,7 @@ import MemoizedReactMarkdown from './MemoizedReactMarkdown';
 import CitationLink from './CitationLink';
 import Code from './Code';
 import { nanoid } from '@/lib/utils';
-import { Element } from 'hast';
+import type { Element } from 'hast';
 
 const disallowedElements = ['script', 'iframe', 'frame', 'embed', 'meta', 'base', 'form', 'style', 'object'];
 
@@ -34,14 +34,14 @@ function MarkdownRenderer({ markdown }: MarkdownRendererProps) {
           {
             Array.isArray(children)
               ? children.map(child => {
-                if (React.isValidElement(child)) {
-                  const childProps = child.props as pChildPropType;
-                  if (childProps.node?.tagName === 'code') {
-                    return <Code key={nanoid()}>{childProps.children}</Code>;
+                  if (React.isValidElement(child)) {
+                    const childProps = child.props as pChildPropType;
+                    if (childProps.node?.tagName === 'code') {
+                      return <Code key={nanoid()}>{childProps.children}</Code>;
+                    }
                   }
-                }
-                return <React.Fragment key={nanoid()}>{child}</React.Fragment>;
-              })
+                  return <React.Fragment key={nanoid()}>{child}</React.Fragment>;
+                })
               : children
             // commenting this out for now, caused a bug where bold list items where rendered as [object Object]
             // String(children)
