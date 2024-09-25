@@ -29,7 +29,7 @@ function CopyButton({ textToCopy, unclickedText = 'Copy', clickedText = 'Copied!
             <span className="sr-only">Copy code</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>{isCopied ? clickedText : unclickedText}</TooltipContent>
+        <TooltipContent className="font-sans">{isCopied ? clickedText : unclickedText}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

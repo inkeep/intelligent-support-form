@@ -67,10 +67,21 @@ const config: Config = {
           from: { height: 'var(--radix-collapsible-content-height)' },
           to: { height: '0' },
         },
+        shimmer: {
+          '0%': {
+            'background-size': '200% 200%',
+            'background-position': '100% 0',
+          },
+          '100%': {
+            'background-size': '200% 200%',
+            'background-position': '-100% 0',
+          },
+        },
       },
       animation: {
         'collapsible-down': 'collapsible-down 0.2s ease-out',
         'collapsible-up': 'collapsible-up 0.2s ease-out',
+        shimmer: 'shimmer 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },

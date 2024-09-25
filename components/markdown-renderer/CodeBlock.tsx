@@ -18,7 +18,7 @@ function CodeBlock({ codeString, language, highlighterTheme = defaultLight }: Co
           className={`${highlighterClassName}`}
           style={{
             ...style,
-            fontSize: '13px',
+            fontSize: '0.78rem',
             overflowX: 'auto',
             padding: '1rem',
             whiteSpace: 'pre',
