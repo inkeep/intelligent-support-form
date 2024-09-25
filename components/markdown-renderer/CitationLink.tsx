@@ -19,7 +19,7 @@ function CitationLink({ children, href, ...props }: CitationLinkProps) {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          className="cursor-pointer font-bold text-[0.625rem] leading-[0.75rem] px-[3px] py-[2px] rounded-sm bg-zinc-200 no-underline dark:text-primary-foreground"
+          className="cursor-pointer font-bold text-[0.625rem] leading-[0.75rem] px-[4px] py-[2px] rounded-sm bg-zinc-200 no-underline dark:text-primary-foreground"
           href={href}
         >
           {citationNumber}

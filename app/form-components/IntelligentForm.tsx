@@ -13,13 +13,13 @@ import type { ProvideAIAnnotationsToolSchema, ProvideLinksToolSchema } from '../
 import { z } from 'zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { contextModelResponseSchema } from '../ai/actions/generateContextModeResponse';
-import { LoadingGrid } from './LoadingGrid';
 import ConfidentAnswer from './ConfidentAnswer';
 import LinkButtons from './LinkButtons';
 import { AIMessageHeader } from './AIMessageHeader';
 import { EscalationFormBody } from './EscalationFormBody';
 import InitialForm from './InitialForm';
 import { FormSubmissionSuccess } from './FormSubmissionSuccess';
+import { LoadingAnimation } from './LoadingAnimation';
 
 export const FormSchema = z.object({
   name: z.string().trim().min(1, {
@@ -79,6 +79,7 @@ export default function IntelligentForm() {
 
   const showEscalationForm = ({ caption }: { caption?: React.ReactNode }) => {
     setShowEscalation(true);
+    setShouldScrollToBottom(true);
     setEscalationFormCaption(
       caption || (
         <p className="text-gray-600 text-sm">
@@ -185,13 +186,13 @@ export default function IntelligentForm() {
       showEscalationForm({});
     } finally {
       setLoading(false);
-      setShouldScrollToBottom(true);
     }
   };
 
   useEffect(() => {
     if (shouldScrollToBottom) {
       scroll.scrollToBottom();
+      setShouldScrollToBottom(false);
     }
   }, [shouldScrollToBottom, scroll]);
 
@@ -219,7 +220,8 @@ export default function IntelligentForm() {
                   {loading && (
                     <>
                       <Separator className="my-6" />
-                      <LoadingGrid />
+                      <AIMessageHeader />
+                      <LoadingAnimation />
                     </>
                   )}
 

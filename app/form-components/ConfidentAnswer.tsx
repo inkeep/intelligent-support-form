@@ -33,15 +33,15 @@ export default function ConfidentAnswer({ links, answer, showEscalationForm, sho
         <Separator className="my-6" />
         {/* collapsible trigger */}
         <CollapsibleTrigger asChild>
-          <div className="flex items-center justify-between w-full space-x-2 cursor-pointer">
+          <div className="flex items-center justify-between w-full space-x-2 cursor-pointer transition-all [&[data-state=open]>svg]:rotate-180">
             <AIMessageHeader />
-            <ChevronDown className="w-4 h-4 text-gray-400" />
+            <ChevronDown className="w-4 h-4 text-gray-400 transition-transform duration-200 shrink-0" />
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down space-y-6">
           {links && links.length > 0 && (
             <>
-              <p className="text-gray-700">I was able to find some help content:</p>
+              <p className="text-gray-900">I was able to find some help content:</p>
               <LinkButtons links={links} />
             </>
           )}

@@ -14,7 +14,7 @@ const Code = React.forwardRef<HTMLElement, CodeProps>(({ className, ...props }, 
     <code
       ref={ref}
       className={cn(
-        'bg-gray-100 rounded-md py-1 px-2 my-0.5 text-[13px] text-gray-700 font-medium min-w-0 inline-block border',
+        'bg-gray-100 rounded-md px-[0.3rem] py-[0.15rem] my-0.5 text-[0.78rem] leading-4 text-gray-800 font-medium min-w-0 inline-block border',
         className,
       )}
       style={{

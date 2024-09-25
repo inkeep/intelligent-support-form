@@ -68,7 +68,7 @@ function MarkdownRenderer({ markdown }: MarkdownRendererProps) {
   };
 
   return (
-    <div className="min-w-0 max-w-full shrink break-words text-sm">
+    <div className="min-w-0 max-w-full shrink break-words text-sm text-gray-900">
       <MemoizedReactMarkdown
         rehypePlugins={[rehypeRaw]}
         components={components}
