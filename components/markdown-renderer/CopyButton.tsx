@@ -2,13 +2,8 @@
 
 import { Check, Copy } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useCopyToClipboard } from '@/lib/utils';
 
 interface CopyButtonProps {
@@ -29,7 +24,7 @@ function CopyButton({ textToCopy, unclickedText = 'Copy', clickedText = 'Copied!
     <TooltipProvider>
       <Tooltip open={isCopied}>
         <TooltipTrigger asChild>
-          <Button variant="ghost" size="sm" className="hover:bg-none text-gray-400" onClick={onCopy}>
+          <Button type="button" variant="ghost" size="icon" className="hover:bg-none text-gray-400" onClick={onCopy}>
             {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             <span className="sr-only">Copy code</span>
           </Button>

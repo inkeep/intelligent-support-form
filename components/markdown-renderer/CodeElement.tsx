@@ -16,7 +16,7 @@ function CodeElement({ inline: inlineProp, className = '', children }: CodeEleme
 
   if (!inline) {
     return (
-      <div className="dark:gray-dark-800 mb-3 rounded-md bg-gray-50">
+      <div className="dark:gray-dark-800 mb-3 rounded-md bg-gray-50 max-w-full">
         <CodeBlockHeader codeString={codeString} language={language} />
         <ScrollArea>
           <div>

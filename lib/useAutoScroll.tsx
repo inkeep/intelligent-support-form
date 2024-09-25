@@ -13,7 +13,6 @@ const isSafari = (): boolean => {
   return safariAgent;
 };
 
-
 export const useAutoScroll = () => {
   const scrollRef = useRef<null | HTMLDivElement>(null);
   const containerRef = useRef<null | HTMLDivElement>(null);
