@@ -9,7 +9,7 @@ import type { Actions } from '../ai/IntelligentFormAIConfig';
 import { Separator } from '@/components/ui/separator';
 import { Form } from '@/components/ui/form';
 import { useAutoScroll } from '@/lib/useAutoScroll';
-import type { ProvideAIAnnotationsToolSchema, ProvideLinksToolSchema } from '../ai/inkeep-qa-tools-schema';
+import type { ProvideAIAnnotationsToolSchema, ProvideRecordsConsideredToolSchema } from '../ai/inkeep-qa-tools-schema';
 import { z } from 'zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { contextModelResponseSchema } from '../ai/actions/generateContextModeResponse';
@@ -49,7 +49,7 @@ export default function IntelligentForm() {
   const [loading, setLoading] = useState(false);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(false);
   const [confidentAnswerMessage, setConfidentAnswerMessage] = useState<{
-    links: z.infer<typeof ProvideLinksToolSchema>['links'];
+    recordsConsidered: z.infer<typeof ProvideRecordsConsideredToolSchema>['recordsConsidered'];
     answer: string;
   } | null>();
   const [showEscalation, setShowEscalation] = useState(false);
@@ -97,22 +97,22 @@ export default function IntelligentForm() {
   const handleAIResponses = ({
     answerConfidence,
     answer,
-    links,
+    recordsConsidered,
     prefilledFormData,
   }: {
     answerConfidence: z.infer<typeof ProvideAIAnnotationsToolSchema>['aiAnnotations']['answerConfidence'];
     answer: string;
-    links: z.infer<typeof ProvideLinksToolSchema>['links'];
+    recordsConsidered: z.infer<typeof ProvideRecordsConsideredToolSchema>['recordsConsidered']
     prefilledFormData?: z.infer<typeof contextModelResponseSchema>;
   }) => {
     if (
       (answerConfidence === 'very_confident' || answerConfidence === 'somewhat_confident') &&
       answer &&
-      links &&
-      links.length > 0
+      recordsConsidered &&
+      recordsConsidered.length > 0
     ) {
       setConfidentAnswerMessage({
-        links,
+        recordsConsidered,
         answer,
       });
     } else {
@@ -120,12 +120,12 @@ export default function IntelligentForm() {
         caption: (
           <div className="space-y-6">
             <AIMessageHeader />
-            {links && links.length > 0 && (
+            {recordsConsidered && recordsConsidered.length > 0 && (
               <>
                 <p className="text-gray-700 text-sm">
                   {"I wasn't able to find a direct answer to your question, but here's some helpful sources:"}
                 </p>
-                <LinkButtons links={links} />
+                <LinkButtons links={recordsConsidered} />
               </>
             )}
             <p className="text-gray-600 text-sm">
@@ -154,20 +154,20 @@ export default function IntelligentForm() {
       const { qaModelResponse, contextModelResponse } = await invokeInkeepAI(message);
 
       if (qaModelResponse && contextModelResponse) {
-        const { aiAnnotations, text, links } = qaModelResponse;
+        const { aiAnnotations, text, recordsConsidered } = qaModelResponse;
         const { responseObject } = contextModelResponse;
         handleAIResponses({
           answerConfidence: aiAnnotations.answerConfidence,
           answer: text,
-          links,
+          recordsConsidered,
           prefilledFormData: responseObject,
         });
       } else if (qaModelResponse && contextModelResponse === null) {
-        const { aiAnnotations, text, links } = qaModelResponse;
+        const { aiAnnotations, text, recordsConsidered } = qaModelResponse;
         handleAIResponses({
           answerConfidence: aiAnnotations.answerConfidence,
           answer: text,
-          links,
+          recordsConsidered,
         });
       } else if (qaModelResponse === null && contextModelResponse) {
         const { responseObject } = contextModelResponse;
@@ -227,7 +227,7 @@ export default function IntelligentForm() {
 
                   {confidentAnswerMessage && (
                     <ConfidentAnswer
-                      links={confidentAnswerMessage.links}
+                      recordsConsidered={confidentAnswerMessage.recordsConsidered}
                       answer={confidentAnswerMessage.answer}
                       showEscalationForm={showEscalationForm}
                       showEscalation={showEscalation}

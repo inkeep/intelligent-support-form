@@ -2,7 +2,7 @@ import { createOpenAI } from '@ai-sdk/openai';
 import { type CoreMessage, generateObject } from 'ai';
 import { getMutableAIState } from 'ai/rsc';
 import { z } from 'zod';
-import { AI } from '../IntelligentFormAIConfig';
+import type { AI } from '../IntelligentFormAIConfig';
 
 const openai = createOpenAI({
   apiKey: process.env.INKEEP_API_KEY,

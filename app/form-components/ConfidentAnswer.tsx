@@ -6,20 +6,20 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 
 import { ChevronDown, UserIcon } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import type { ProvideLinksToolSchema } from '../ai/inkeep-qa-tools-schema';
-import { z } from 'zod';
+import type { ProvideRecordsConsideredToolSchema } from '../ai/inkeep-qa-tools-schema';
+import type { z } from 'zod';
 import MarkdownRenderer from '@/components/markdown-renderer/MarkdownRenderer';
 import { AIMessageHeader } from './AIMessageHeader';
 import LinkButtons from './LinkButtons';
 
 interface ConfidentAnswerProps {
-  links: z.infer<typeof ProvideLinksToolSchema>['links'];
+  recordsConsidered: z.infer<typeof ProvideRecordsConsideredToolSchema>['recordsConsidered'];
   answer: string;
   showEscalationForm: ({ caption }: { caption: React.ReactNode }) => void;
   showEscalation: boolean;
 }
 
-export default function ConfidentAnswer({ links, answer, showEscalationForm, showEscalation }: ConfidentAnswerProps) {
+export default function ConfidentAnswer({ recordsConsidered, answer, showEscalationForm, showEscalation }: ConfidentAnswerProps) {
   const [open, setOpen] = useState(true);
   useEffect(() => {
     if (showEscalation) {
@@ -39,10 +39,12 @@ export default function ConfidentAnswer({ links, answer, showEscalationForm, sho
           </div>
         </CollapsibleTrigger>
         <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down space-y-6">
-          {links && links.length > 0 && (
+          {recordsConsidered && recordsConsidered.length > 0 && (
             <>
-              <p className="text-gray-900">I was able to find some help content:</p>
-              <LinkButtons links={links} />
+              <p className="text-gray-700 text-sm">
+                {"Here are the sources I considered:"}
+              </p>
+              <LinkButtons links={recordsConsidered} />
             </>
           )}
           <MarkdownRenderer markdown={answer} />
