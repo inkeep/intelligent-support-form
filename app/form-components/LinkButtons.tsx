@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { LinkIcon } from 'lucide-react';
-import type { ProvideLinksToolSchema } from '../ai/inkeep-qa-tools-schema';
-import { z } from 'zod';
+import type { ProvideRecordsConsideredToolSchema } from '../ai/inkeep-qa-tools-schema';
+import type { z } from 'zod';
 
 export default function LinkButtons({
   links,
 }: {
-  links: z.infer<typeof ProvideLinksToolSchema>['links'];
+  links: z.infer<typeof ProvideRecordsConsideredToolSchema>['recordsConsidered']
 }) {
   const uniqueLinks = links
     ? links.filter((link, index, self) => index === self.findIndex(t => t.url === link.url && t.title === link.title))

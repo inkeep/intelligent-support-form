@@ -37,13 +37,13 @@ export function LoadingAnimation() {
             }}
             transition={{
               y: {
-                repeat: Infinity,
+                repeat: Number.POSITIVE_INFINITY,
                 duration: 1.5,
                 delay: i * 0.2,
                 ease: 'easeInOut',
               },
               opacity: {
-                repeat: Infinity,
+                repeat: Number.POSITIVE_INFINITY,
                 duration: 1.5,
                 delay: i * 0.2,
                 ease: 'easeInOut',

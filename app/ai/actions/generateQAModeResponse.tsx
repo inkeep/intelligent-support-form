@@ -3,10 +3,10 @@ import 'server-only'
 import { getMutableAIState } from 'ai/rsc'
 import { createOpenAI } from '@ai-sdk/openai'
 
-import { CoreMessage, generateText } from 'ai'
-import { ProvideAIAnnotationsToolSchema, ProvideLinksToolSchema } from '../inkeep-qa-tools-schema'
-import { AI } from '../IntelligentFormAIConfig'
-import { z } from 'zod'
+import { type CoreMessage, generateText } from 'ai'
+import { ProvideAIAnnotationsToolSchema, ProvideRecordsConsideredToolSchema } from '../inkeep-qa-tools-schema'
+import type { AI } from '../IntelligentFormAIConfig'
+import type { z } from 'zod'
 
 const openai = createOpenAI({
   apiKey: process.env.INKEEP_API_KEY,
@@ -44,12 +44,12 @@ export const generateQAModeResponse = async (message: string) => {
           }) as CoreMessage
       ),
     tools: {
-      provideLinks: {
-        parameters: ProvideLinksToolSchema,
+      provideRecordsConsidered: {
+        parameters: ProvideRecordsConsideredToolSchema,
       },
       provideAIAnnotations: {
         parameters: ProvideAIAnnotationsToolSchema,
-      }
+      },
     },
     toolChoice: 'auto',
   })
@@ -66,11 +66,11 @@ export const generateQAModeResponse = async (message: string) => {
   })
 
   const aiAnnotations = toolCalls.find(toolCall => toolCall.toolName === 'provideAIAnnotations')?.args.aiAnnotations as z.infer<typeof ProvideAIAnnotationsToolSchema>['aiAnnotations']
-  const links = toolCalls.find(toolCall => toolCall.toolName === 'provideLinks')?.args.links as z.infer<typeof ProvideLinksToolSchema>['links']
+  const recordsConsidered = toolCalls.find(toolCall => toolCall.toolName === 'provideRecordsConsidered')?.args.recordsConsidered as z.infer<typeof ProvideRecordsConsideredToolSchema>['recordsConsidered']
 
   return {
     aiAnnotations,
-    links,
     text,
+    recordsConsidered
   }
 }
