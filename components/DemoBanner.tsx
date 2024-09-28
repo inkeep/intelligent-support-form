@@ -8,7 +8,7 @@ export function DemoBanner() {
         <div className="flex-auto lg:flex-2 mx-2 truncate text-center">Form submissions will not be collected.</div>
         <div className="flex-1 mx-2 flex-shrink-0 flex items-center justify-end whitespace-nowrap">
           <a
-            href="mailto:hi@inkeep.com?subject=Inkeep%20support%20copilot%20demo"
+            href="mailto:hi@inkeep.com?subject=Inkeep%20intelligent%20form%20demo"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center font-semibold text-sky-500 hover:text-sky-700 "
