@@ -102,7 +102,7 @@ export default function IntelligentForm() {
   }: {
     answerConfidence: z.infer<typeof ProvideAIAnnotationsToolSchema>['aiAnnotations']['answerConfidence'];
     answer: string;
-    recordsConsidered: z.infer<typeof ProvideRecordsConsideredToolSchema>['recordsConsidered']
+    recordsConsidered: z.infer<typeof ProvideRecordsConsideredToolSchema>['recordsConsidered'];
     prefilledFormData?: z.infer<typeof contextModelResponseSchema>;
   }) => {
     if (
@@ -197,7 +197,7 @@ export default function IntelligentForm() {
   }, [shouldScrollToBottom, scroll]);
 
   return (
-    <div className="flex flex-col h-full justify-center items-center py-8">
+    <div className="flex flex-col h-full min-h-0 max-h-full justify-center items-center py-8">
       <div className="w-[600px] max-w-full max-h-full mx-auto rounded-xl border bg-card text-card-foreground shadow flex flex-col">
         <div className="px-6 py-4 font-medium border-b-[1px]">Contact Support</div>
         {/* [&>div>div]:!block is a hack to be able to nest the ScrollAreas see https://github.com/radix-ui/primitives/issues/926 */}
