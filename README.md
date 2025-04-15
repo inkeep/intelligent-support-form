@@ -1,22 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Intelligent Support Form
 
-## Getting Started
+This is a Next.js application for handling support ticket submissions with AI-powered form assistance, integrated with Zendesk.
 
-First, run the development server:
+## Setup
+
+1. Clone the repository
+2. Install dependencies
+
+```bash
+npm install
+```
+
+3. Create a `.env.local` file in the project root with the following environment variables:
+
+```
+ZENDESK_SUBDOMAIN=your-subdomain
+ZENDESK_EMAIL=your-email@example.com
+ZENDESK_API_TOKEN=your-zendesk-api-token
+ZENDESK_TICKET_TYPE_FIELD_ID=custom_field_123
+```
+
+### Zendesk Setup
+
+To get the required Zendesk credentials:
+
+1. **Subdomain**: This is the subdomain of your Zendesk instance (e.g., for `company.zendesk.com`, the subdomain is `company`).
+
+2. **API Token**: 
+   - Log in to your Zendesk Admin account
+   - Go to Admin Center > Apps and Integrations > APIs > Zendesk API
+   - Create a new API token
+
+3. **Email**: The email address associated with your Zendesk admin account
+
+4. **Ticket Type Field ID**: 
+   - Go to Admin Center > Objects and rules > Ticket fields
+   - Find your ticket type custom field
+   - The ID will be in the URL when you edit the field
+
+## Running the Application
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API Endpoints
+
+- `POST /api/create-ticket` - Creates a new support ticket and submits it to Zendesk
 
 ## Learn More
 

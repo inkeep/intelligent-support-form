@@ -74,6 +74,26 @@ export function EscalationFormBody({ control }: EscalationFormBodyProps) {
           </FormItem>
         )}
       />
+      <FormField
+        control={control}
+        name="organizationId"
+        render={({ field }) => {
+          // Ensure organization ID is treated as a number
+          const numericValue = typeof field.value === 'string' ? Number.parseInt(field.value, 10) : field.value;
+          return (
+            <input 
+              type="hidden" 
+              name={field.name}
+              value={numericValue || ''} 
+              onChange={(e) => {
+                const val = e.target.value;
+                // Try to parse as number if it's a string
+                field.onChange(val ? Number.parseInt(val, 10) : undefined);
+              }}
+            />
+          );
+        }}
+      />
     </div>
   );
 }

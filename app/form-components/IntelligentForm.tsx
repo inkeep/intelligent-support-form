@@ -10,7 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import { Form } from '@/components/ui/form';
 import { useAutoScroll } from '@/lib/useAutoScroll';
 import type { ProvideAIAnnotationsToolSchema, ProvideRecordsConsideredToolSchema } from '../ai/inkeep-qa-tools-schema';
-import { z } from 'zod';
+import type { z } from 'zod';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import type { contextModelResponseSchema } from '../ai/actions/generateContextModeResponse';
 import ConfidentAnswer from './ConfidentAnswer';
@@ -20,29 +20,11 @@ import { EscalationFormBody } from './EscalationFormBody';
 import InitialForm from './InitialForm';
 import { FormSubmissionSuccess } from './FormSubmissionSuccess';
 import { LoadingAnimation } from './LoadingAnimation';
+import { TicketSchema } from '@/app/schemas/ticketSchema';
+import type { TicketSchemaType } from '@/app/schemas/ticketSchema';
 
-export const FormSchema = z.object({
-  name: z.string().trim().min(1, {
-    message: 'Please enter your name.',
-  }),
-  email: z
-    .string()
-    .trim()
-    .min(1, {
-      message: 'Please enter your email.',
-    })
-    .email({
-      message: 'Please enter a valid email.',
-    }),
-  message: z.string().trim().min(1, {
-    message: 'Please enter a message.',
-  }),
-  subject: z.string(),
-  priority: z.string(),
-  ticketType: z.string(),
-});
-
-export type FormSchemaType = z.infer<typeof FormSchema>;
+// Use the imported schema for form validation
+export type FormSchemaType = TicketSchemaType;
 
 export default function IntelligentForm() {
   const { invokeInkeepAI } = useActions() as Actions;
@@ -55,16 +37,21 @@ export default function IntelligentForm() {
   const [showEscalation, setShowEscalation] = useState(false);
   const [escalationFormCaption, setEscalationFormCaption] = useState<React.ReactNode>();
   const [nextWasClicked, setNextWasClicked] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [apiSubmissionSuccessful, setApiSubmissionSuccessful] = useState(false);
 
   const form = useForm<FormSchemaType>({
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(TicketSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      message: '',
+      name: 'Abby Tester',
+      email: 'abby@example.com',
+      message: 'General inquiry',
       subject: 'General Inquiry',
       priority: 'medium',
       ticketType: 'issue_in_production',
+      organizationId: 123456,
     },
   });
 
@@ -89,9 +76,67 @@ export default function IntelligentForm() {
     );
   };
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    console.log('Form submitted:', { ...data, aiAnswer: confidentAnswerMessage });
-    // Here you would typically send the form data to your backend
+  const onSubmit = async (data: TicketSchemaType) => {
+    setFormError(null);
+    setFieldErrors({});
+    setSubmitting(true);
+    setApiSubmissionSuccessful(false);
+    
+    try {
+      // Send form data to the API endpoint
+      const response = await fetch('/api/create-ticket', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        console.error('Error submitting form:', result);
+        
+        // Handle field-specific validation errors
+        if (result.errors) {
+          const newFieldErrors: Record<string, string[]> = {};
+          
+          // Process validation errors from the API
+          for (const [field, error] of Object.entries(result.errors)) {
+            if (field !== '_errors' && typeof error === 'object' && error !== null) {
+              const fieldError = error as { _errors?: string[] };
+              if (fieldError._errors && fieldError._errors.length > 0) {
+                newFieldErrors[field] = fieldError._errors;
+                
+                // Set form errors for the affected fields
+                if (field in form.formState.errors === false) {
+                  form.setError(field as keyof FormSchemaType, { 
+                    type: 'server', 
+                    message: fieldError._errors[0] 
+                  });
+                }
+              }
+            }
+          }
+          
+          setFieldErrors(newFieldErrors);
+          setFormError('Please fix the errors below and try again.');
+        } else {
+          // Generic error message
+          setFormError(result.message || 'Failed to submit the form. Please try again.');
+        }
+        return;
+      }
+
+      // Form submission was successful
+      console.log('Ticket created successfully:', result);
+      setApiSubmissionSuccessful(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setFormError('An unexpected error occurred. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleAIResponses = ({
@@ -203,7 +248,7 @@ export default function IntelligentForm() {
         {/* [&>div>div]:!block is a hack to be able to nest the ScrollAreas see https://github.com/radix-ui/primitives/issues/926 */}
         <ScrollArea className="[&>div>div]:!block flex-grow px-5 pb-6" ref={scroll.containerRef}>
           <div className="flex flex-col" ref={scroll.scrollRef}>
-            {isSubmitSuccessful ? (
+            {apiSubmissionSuccessful ? (
               <FormSubmissionSuccess />
             ) : (
               <Form {...form}>
@@ -239,9 +284,26 @@ export default function IntelligentForm() {
                       <Separator className="my-6" />
                       {escalationFormCaption}
                       <EscalationFormBody control={form.control} />
+                      
+                      {formError && (
+                        <div className="bg-red-50 border border-red-200 rounded-md p-3 text-red-600 text-sm mt-4">
+                          <p className="font-medium mb-1">{formError}</p>
+                          {Object.entries(fieldErrors).length > 0 && (
+                            <ul className="list-disc pl-5 space-y-1">
+                              {Object.entries(fieldErrors).map(([field, errors]) => (
+                                <li key={field}>
+                                  <span className="font-medium">{field}: </span>
+                                  {errors[0]}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      )}
+                      
                       <div className="flex justify-end">
-                        <Button type="submit" disabled={isSubmitting}>
-                          Submit
+                        <Button type="submit" disabled={submitting}>
+                          {submitting ? 'Submitting...' : 'Submit'}
                         </Button>
                       </div>
                     </div>
