@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { TicketSchema, TicketSchemaType } from '@/app/schemas/ticketSchema';
+import { TicketSchema } from '@/app/schemas/ticketSchema';
 
 // Map our ticket priorities to Zendesk priorities
 const priorityMap: Record<string, number> = {

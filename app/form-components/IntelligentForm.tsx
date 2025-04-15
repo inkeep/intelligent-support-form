@@ -56,7 +56,6 @@ export default function IntelligentForm() {
   });
 
   const {
-    formState: { isSubmitting, isSubmitSuccessful },
     handleSubmit,
     setValue,
     getValues,
